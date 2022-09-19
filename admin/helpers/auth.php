@@ -64,9 +64,12 @@ function set_session_auth($data = null){
 
 // similar to logout
 function end_auth(){
+    session_start();
     session_destroy();
 
     if(isset($_COOKIE["AUTH_TOKEN"]))
         setcookie("AUTH_TOKEN", null, time()-86400, "/");
+
+    header("Location: index.php");        
 }
 
