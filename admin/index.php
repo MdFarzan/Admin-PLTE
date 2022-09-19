@@ -5,6 +5,71 @@
     */
 
 require_once '../app.php';
+require_once 'config/db.php';
+require_once 'helpers/auth.php';
+
+$db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+
+if ($db->connect_error)
+    die("unable to connect to the database");
+
+$passwordError = '';
+$emailError = '';
+
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+
+    $remember_me = isset($_POST['remember-me']) ? true : false;
+
+    $sql = "SELECT * FROM admin_auth WHERE email = '$email'";
+
+    $res = $db->query($sql);
+
+    if ($res->num_rows > 0) {
+        $data = $res->fetch_assoc();
+
+        if (password_verify($password, $data['password'])) {
+               
+            $user_id = $data['id'];
+
+            if($remember_me){
+
+                // setting auth token for 1 month
+                $token = sha1(rand(1, 20));
+                setcookie('AUTH_TOKEN', $token, time() + (86400*30), '/');
+                $sql = "UPDATE admin_auth set auth_token = '$token' WHERE id = '$user_id'";
+                $db->query($sql);
+            }
+
+            $session_data = [
+                    "ADMIN_LOGGED_IN" => true,
+                    "USER_ID" => $user_id,
+                    "USER_EMAIL" => $data['email']
+            ];
+
+            set_session_auth($session_data);
+            header("Location: dashboard.php");
+
+        } 
+        else
+            $passwordError = "Password not matched!";
+
+    }
+    
+    else {
+        $emailError = "Email not found!";
+    }
+}
+
+else{
+    verify_auth($db);
+}
+
 
 ?>
 
@@ -30,20 +95,26 @@ require_once '../app.php';
         <div id="form-wrap" class="bg-white">
             <h2 class="position-relative">Sign in</h2>
 
-            <form class="form" action="">
+            <form class="form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST" autocomplete="off">
 
-                <div class="input-group mb-4 mr-sm-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text"><i class="fa-solid fa-user"></i></div>
+                <div class="mb-4">
+                    <div class="input-group mr-sm-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fa-solid fa-user"></i></div>
+                        </div>
+                        <input type="email" name="email" class="form-control" placeholder="Email" required>
                     </div>
-                    <input type="text" name="email" class="form-control" placeholder="Email">
+                    <p class="text-danger mb-0"><?php echo $emailError; ?></p>
                 </div>
 
-                <div class="input-group mb-4 mr-sm-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text"><i class="fa-solid fa-key"></i></div>
+                <div class="mb-4">
+                    <div class="input-group mr-sm-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fa-solid fa-key"></i></div>
+                        </div>
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
                     </div>
-                    <input type="password" name="password" class="form-control" placeholder="Password">
+                    <p class="text-danger mb-0"><?php echo $passwordError; ?></p>
                 </div>
 
                 <div class="form-check mb-4 mr-sm-2">
