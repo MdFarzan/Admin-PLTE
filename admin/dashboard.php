@@ -224,11 +224,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </ul>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-th"></i>
+            <a href="logout.php" class="nav-link">
+              <!-- <i class="nav-icon fas fa-th"></i> -->
+              <!-- <i class="nav-icon fa fa-sign-out" aria-hidden="true"></i> -->
+              <i class="nav-icon fas fa-sign-out-alt" style="transform:rotate(180deg);"></i>
               <p>
-                Simple Link
-                <span class="right badge badge-danger">New</span>
+                Logout
               </p>
             </a>
           </li>
