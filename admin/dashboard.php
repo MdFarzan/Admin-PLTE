@@ -1,3 +1,9 @@
+<?php 
+
+  require_once 'helpers/auth.php';
+  verify_session_auth();
+
+?>
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
