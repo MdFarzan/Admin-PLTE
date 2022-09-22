@@ -5,6 +5,44 @@
     */
 
 require_once '../app.php';
+require_once 'helpers/mailer.php';
+require_once 'config/db.php';
+
+$emailError = '';
+
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+    $db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
+
+    if ($db->connect_error)
+        die("unable to connect to the database");
+
+    $email = trim($_POST['email']);
+    
+
+    $sql = "SELECT * FROM admin_auth WHERE email = '$email'";
+
+    $res = $db->query($sql);
+
+    if ($res->num_rows > 0) {
+        $data = $res->fetch_assoc();    
+        
+        if($otp = send_forget_password_mail_to($data['email']) ){
+            session_start();
+            $_SESSION['PASS_REC_EXP'] = time() + (60 * 10);  // Password recovery expiry time 10 min
+            $_SESSION['PASS_REC_OTP'] = $otp; // otp for password recovery
+            $_SESSION['PASS_REC_UID'] = $data['id'];
+            header('Location: reset_password.php');
+        }
+        
+
+    }
+    else{
+        $emailError = 'Email not found!';
+    }
+
+
+}
 
 ?>
 
@@ -30,18 +68,17 @@ require_once '../app.php';
         <div id="form-wrap" class="bg-white text-center ">
             <h2 class="position-relative">Forget Password</h2>
             <p class="lead">Enter your registered email</p>
-            <form class="form" action="">
+            <form class="form" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST">
 
-                <div class="input-group mb-4 mr-sm-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text"><i class="fa-solid fa-user"></i></div>
+                <div class="mb-4">
+                    <div class="input-group mr-sm-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><i class="fa-solid fa-user"></i></div>
+                        </div>
+                        <input type="text" name="email" class="form-control" placeholder="Email" required >
                     </div>
-                    <input type="text" name="email" class="form-control" placeholder="Email">
+                    <p class="text-danger mb-0"><?php echo $emailError; ?></p>
                 </div>
-
-
-
-                
 
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary mb-2">Find my Account</button>
@@ -49,7 +86,7 @@ require_once '../app.php';
             </form>
 
             <div class="text-center back">
-                <a href="#" class="text-secondary"><i class="fa-solid fa-arrow-left-long"></i>Back to site</a>
+                <a href="<?php echo BASE_URL; ?>" class="text-secondary"><i class="fa-solid fa-arrow-left-long"></i>Back to site</a>
             </div>
         </div>
     </div>
