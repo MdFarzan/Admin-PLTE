@@ -22,7 +22,7 @@ function send_forget_password_mail_to($to_email){
         global $mail;
 
         //Server settings
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      
+        $mail->SMTPDebug = SMTP::DEBUG_OFF;                      
         $mail->isSMTP();                                            
         $mail->Host       = 'smtp.gmail.com';                     
         $mail->SMTPAuth   = true;                                  
@@ -45,7 +45,7 @@ function send_forget_password_mail_to($to_email){
         $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
     
         $mail->send();
-        return true;
+        return $otp;
     } catch (Exception $e) {
         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
         return false;
