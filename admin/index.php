@@ -1,6 +1,6 @@
 <?php
 /* 
-        sign_in.php
+        index.php
         sign_in form / entrypoint for admin
     */
 
@@ -125,11 +125,11 @@ else{
                 </div>
 
                 <button type="submit" class="btn btn-primary mb-2">Sign In</button>
-                <a href="#" class="float-right">Forget Password?</a>
+                <a href="forget_password.php" class="float-right">Forget Password?</a>
             </form>
 
             <div class="text-center back">
-                <a href="#" class="text-secondary"><i class="fa-solid fa-arrow-left-long"></i>Back to site</a>
+                <a href="<?php echo BASE_URL; ?>" class="text-secondary"><i class="fa-solid fa-arrow-left-long"></i>Back to site</a>
             </div>
         </div>
     </div>
