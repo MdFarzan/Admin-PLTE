@@ -1,7 +1,10 @@
 <?php 
 
   require_once 'helpers/auth.php';
-  verify_session_auth();
+  require_once '../app.php';
+  verify_session_auth(); // should be called before any admin action which requires admin auth
+
+
 
 ?>
 <!DOCTYPE html>
@@ -13,7 +16,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | Starter</title>
+  <title><?php echo APP_NAME ?> | Starter</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -168,7 +171,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
       <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">AdminLTE 3</span>
+      <span class="brand-text font-weight-light"><?php echo APP_NAME ?></span>
     </a>
 
     <!-- Sidebar -->
@@ -176,10 +179,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="dist/img/avatar3.png" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block">ADMIN</a>
         </div>
       </div>
 
@@ -341,10 +344,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <footer class="main-footer">
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
-      Anything you want
+      It's Just a Start.
     </div>
-    <!-- Default to the left -->
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+    <!-- Default to the left -->Developed with ❤️ | 
+    <strong><a href="https://github.com/MdFarzan" target="_blank">Md Farzan</a> </strong>
   </footer>
 </div>
 <!-- ./wrapper -->
